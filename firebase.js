@@ -4,7 +4,12 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-aut
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
-  // your config
+  apiKey: "AIzaSyB4Kt8vtK5-ri2lHzcCBIHppufkdv34fsk",
+  authDomain: "heart-match-matrimony.firebaseapp.com",
+  projectId: "heart-match-matrimony",
+  storageBucket: "heart-match-matrimony.firebasestorage.app",
+  messagingSenderId: "107208388464",
+  appId: "1:107208388464:web:2170fb1413d3281b0469b5"
 };
 
 const app = initializeApp(firebaseConfig);
