@@ -27,27 +27,113 @@ h2{
     color:#e91e63;
 }
 
+label{
+    display:block;
+    margin-top:10px;
+    font-weight:bold;
+}
+
 input,select,textarea{
     width:100%;
     padding:10px;
-    margin:8px 0;
+    margin-top:5px;
     border:1px solid #ccc;
     border-radius:5px;
     box-sizing:border-box;
 }
 
-<form id="profileForm">
-    <!-- input fields -->
+button{
+    width:100%;
+    padding:12px;
+    margin-top:20px;
+    background:#e91e63;
+    color:white;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    font-size:16px;
+}
 
-    <button type="submit">Save Profile</button>
+button:hover{
+    background:#c2185b;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Create / Edit Profile</h2>
+
+<form id="profileForm">
+
+<label>Full Name</label>
+<input type="text" id="name" required>
+
+<label>Age</label>
+<input type="number" id="age" required>
+
+<label>Date of Birth</label>
+<input type="date" id="dob">
+
+<label>Religion</label>
+<input type="text" id="religion">
+
+<label>Caste</label>
+<input type="text" id="caste">
+
+<label>Rashi</label>
+<input type="text" id="rashi">
+
+<label>Nakshatra</label>
+<input type="text" id="nakshatra">
+
+<label>Education</label>
+<input type="text" id="education">
+
+<label>Occupation</label>
+<input type="text" id="occupation">
+
+<label>Family Details</label>
+<textarea id="family"></textarea>
+
+<label>Contact Number</label>
+<input type="tel" id="phone">
+
+<label>Email</label>
+<input type="email" id="email">
+
+<label>Address</label>
+<textarea id="address"></textarea>
+
+<label>Marital Status</label>
+<select id="status">
+<option>Never Married</option>
+<option>Divorced</option>
+<option>Widowed</option>
+</select>
+
+<button type="submit">Save Profile</button>
+
 </form>
 
-    <script>
+</div>
+
+<script>
 document.getElementById("profileForm").addEventListener("submit", function(e){
     e.preventDefault();
 
-    // Save profile data here
+    localStorage.setItem("name", document.getElementById("name").value);
+    localStorage.setItem("age", document.getElementById("age").value);
+    localStorage.setItem("email", document.getElementById("email").value);
+    localStorage.setItem("phone", document.getElementById("phone").value);
 
-    window.location.href = "myprofile.html";
+    alert("Profile Saved Successfully!");
+
+    window.location.href="myprofile.html";
 });
 </script>
+
+</body>
+</html>
