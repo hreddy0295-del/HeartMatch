@@ -44,3 +44,14 @@ button{
     border:none;
     border-radius:5px;
     font-size:
+<button type="submit">Save Profile</button>
+
+<script>
+document.querySelector("form").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    // Save your data here (Firebase or localStorage)
+
+    window.location.href = "myprofile.html";
+});
+</script>
