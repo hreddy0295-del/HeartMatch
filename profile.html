@@ -36,13 +36,17 @@ input,select,textarea{
     box-sizing:border-box;
 }
 
-<button type="submit">Save Profile</button>
+<form id="profileForm">
+    <!-- input fields -->
 
-<script>
-document.querySelector("form").addEventListener("submit", function(e) {
+    <button type="submit">Save Profile</button>
+</form>
+
+    <script>
+document.getElementById("profileForm").addEventListener("submit", function(e){
     e.preventDefault();
 
-    // Save your data here (Firebase or localStorage)
+    // Save profile data here
 
     window.location.href = "myprofile.html";
 });
