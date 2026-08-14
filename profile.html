@@ -120,18 +120,90 @@ button:hover{
 
 </div>
 
-<script>
-document.getElementById("profileForm").addEventListener("submit", function(e){
-    e.preventDefault();
+<script type="module">
+import { auth, db } from "./firebase.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+    doc,
+    getDoc,
+    setDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    localStorage.setItem("name", document.getElementById("name").value);
-    localStorage.setItem("age", document.getElementById("age").value);
-    localStorage.setItem("email", document.getElementById("email").value);
-    localStorage.setItem("phone", document.getElementById("phone").value);
+const form = document.getElementById("profileForm");
 
-    alert("Profile Saved Successfully!");
+onAuthStateChanged(auth, async (user) => {
 
-    window.location.href="myprofile.html";
+    if (!user) {
+        alert("Please login first.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    try {
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+
+        if (userSnap.exists()) {
+
+            const data = userSnap.data();
+
+            document.getElementById("name").value = data.name || "";
+            document.getElementById("age").value = data.age || "";
+            document.getElementById("dob").value = data.dob || "";
+            document.getElementById("religion").value = data.religion || "";
+            document.getElementById("caste").value = data.caste || "";
+            document.getElementById("rashi").value = data.rashi || "";
+            document.getElementById("nakshatra").value = data.nakshatra || "";
+            document.getElementById("education").value = data.education || "";
+            document.getElementById("occupation").value = data.occupation || "";
+            document.getElementById("family").value = data.family || "";
+            document.getElementById("phone").value = data.phone || "";
+            document.getElementById("email").value = data.email || user.email || "";
+            document.getElementById("address").value = data.address || "";
+            document.getElementById("status").value = data.status || "Never Married";
+
+        } else {
+            document.getElementById("email").value = user.email || "";
+        }
+
+    } catch (error) {
+        console.error(error);
+        alert("Unable to load profile: " + error.message);
+    }
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        try {
+
+            const profileData = {
+                name: document.getElementById("name").value,
+                age: document.getElementById("age").value,
+                dob: document.getElementById("dob").value,
+                religion: document.getElementById("religion").value,
+                caste: document.getElementById("caste").value,
+                rashi: document.getElementById("rashi").value,
+                nakshatra: document.getElementById("nakshatra").value,
+                education: document.getElementById("education").value,
+                occupation: document.getElementById("occupation").value,
+                family: document.getElementById("family").value,
+                phone: document.getElementById("phone").value,
+                email: document.getElementById("email").value,
+                address: document.getElementById("address").value,
+                status: document.getElementById("status").value
+            };
+
+            await setDoc(doc(db, "users", user.uid), profileData, { merge: true });
+
+            alert("Profile updated successfully!");
+
+            window.location.href = "myprofile.html";
+
+        } catch (error) {
+            console.error(error);
+            alert("Unable to save profile: " + error.message);
+        }
+    });
 });
 </script>
 
