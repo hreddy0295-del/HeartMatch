@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>HeartMatch - Create Profile</title>
 
 <style>
@@ -33,13 +34,20 @@ label{
     font-weight:bold;
 }
 
-input,select,textarea{
+input,
+select,
+textarea{
     width:100%;
     padding:10px;
     margin-top:5px;
     border:1px solid #ccc;
     border-radius:5px;
     box-sizing:border-box;
+}
+
+textarea{
+    min-height:100px;
+    resize:vertical;
 }
 
 button{
@@ -109,9 +117,10 @@ button:hover{
 
 <label>Marital Status</label>
 <select id="status">
-<option>Never Married</option>
-<option>Divorced</option>
-<option>Widowed</option>
+    <option value="">Select Status</option>
+    <option value="Never Married">Never Married</option>
+    <option value="Divorced">Divorced</option>
+    <option value="Widowed">Widowed</option>
 </select>
 
 <button type="submit">Save Profile</button>
@@ -120,19 +129,120 @@ button:hover{
 
 </div>
 
-<script>
-document.getElementById("profileForm").addEventListener("submit", function(e){
+<script type="module">
+
+import { auth, db } from "./firebase.js";
+
+import {
+    doc,
+    setDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+import {
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+let currentUser = null;
+
+
+/* Check logged-in user */
+onAuthStateChanged(auth, (user) => {
+
+    if (user) {
+
+        currentUser = user;
+
+        console.log("Logged-in user:", user.uid);
+
+    } else {
+
+        currentUser = null;
+
+        console.log("No user is logged in.");
+
+    }
+
+});
+
+
+/* Save profile */
+document.getElementById("profileForm").addEventListener("submit", async function(e) {
+
     e.preventDefault();
 
-    localStorage.setItem("name", document.getElementById("name").value);
-    localStorage.setItem("age", document.getElementById("age").value);
-    localStorage.setItem("email", document.getElementById("email").value);
-    localStorage.setItem("phone", document.getElementById("phone").value);
+    if (!currentUser) {
 
-    alert("Profile Saved Successfully!");
+        alert("Please login first.");
 
-    window.location.href="myprofile.html";
+        window.location.href = "login.html";
+
+        return;
+    }
+
+
+    try {
+
+        const profileData = {
+
+            name: document.getElementById("name").value.trim(),
+
+            age: document.getElementById("age").value,
+
+            dob: document.getElementById("dob").value,
+
+            religion: document.getElementById("religion").value.trim(),
+
+            caste: document.getElementById("caste").value.trim(),
+
+            rashi: document.getElementById("rashi").value.trim(),
+
+            nakshatra: document.getElementById("nakshatra").value.trim(),
+
+            education: document.getElementById("education").value.trim(),
+
+            occupation: document.getElementById("occupation").value.trim(),
+
+            family: document.getElementById("family").value.trim(),
+
+            phone: document.getElementById("phone").value.trim(),
+
+            email: document.getElementById("email").value.trim(),
+
+            address: document.getElementById("address").value.trim(),
+
+            status: document.getElementById("status").value,
+
+            uid: currentUser.uid
+
+        };
+
+
+        /* Save to Firestore */
+        await setDoc(
+            doc(db, "users", currentUser.uid),
+            profileData,
+            { merge: true }
+        );
+
+
+        alert("Profile saved successfully!");
+
+
+        /* Open My Profile page */
+        window.location.href = "myprofile.html";
+
+
+    } catch (error) {
+
+        console.error("Error saving profile:", error);
+
+        alert("Unable to save profile.\n\n" + error.message);
+
+    }
+
 });
+
 </script>
 
 </body>
